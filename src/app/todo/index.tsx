@@ -3,10 +3,12 @@ import { useState } from "react";
 import {
   Button,
   FlatList,
+  Keyboard,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { Toast } from "./../../../node_modules/react-native-toast-message/lib/src/Toast";
@@ -40,53 +42,54 @@ export default function TodoApp() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Todo App</Text>
-      </View>
-      {/* form */}
-      <View style={styles.form}>
-        <Text>Nhập việc cần làm</Text>
-        <TextInput
-          value={todo}
-          style={styles.form_input}
-          onChangeText={(value) => handleChangeTodo(value)}
-          placeholder="Nhập những việc cần làm"
-        />
-        <View style={styles.form_button}>
-          <Button
-            onPress={handleAddTodo}
-            color={"#FF5B00"}
-            title="Thêm mới việc cần làm"
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Todo App</Text>
+        </View>
+        {/* form */}
+        <View style={styles.form}>
+          <Text>Nhập việc cần làm</Text>
+          <TextInput
+            value={todo}
+            style={styles.form_input}
+            onChangeText={(value) => handleChangeTodo(value)}
+            placeholder="Nhập những việc cần làm"
+          />
+          <View style={styles.form_button}>
+            <Button
+              onPress={handleAddTodo}
+              color={"#FF5B00"}
+              title="Thêm mới việc cần làm"
+            />
+          </View>
+        </View>
+
+        {/* List todo */}
+        <View style={styles.list_todo}>
+          <FlatList
+            data={todos}
+            keyExtractor={(item) => item.id + ""}
+            renderItem={(data) => {
+              return (
+                <Pressable style={styles.list_todo_item}>
+                  <View style={styles.group_todo}>
+                    <Text>{data.item.title}</Text>
+                    <FontAwesome
+                      name="trash"
+                      size={24}
+                      color="red"
+                      onPress={() => handleDeleteTodo(data.item.id)}
+                    />
+                  </View>
+                </Pressable>
+              );
+            }}
           />
         </View>
+        <Toast position="top" visibilityTime={2000} />
       </View>
-
-      {/* List todo */}
-      <View style={styles.list_todo}>
-        <FlatList
-          data={todos}
-          keyExtractor={(item) => item.id + ""}
-          renderItem={(data) => {
-            return (
-              <Pressable style={styles.list_todo_item}>
-                <View style={styles.group_todo}>
-                  <Text>{data.item.title}</Text>
-                  <FontAwesome
-                    name="trash"
-                    size={24}
-                    color="red"
-                    onPress={() => handleDeleteTodo(data.item.id)}
-                  />
-                </View>
-              </Pressable>
-            );
-          }}
-        />
-      </View>
-
-      <Toast position="top" visibilityTime={2000} />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
