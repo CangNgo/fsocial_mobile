@@ -1,4 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Button,
@@ -21,6 +22,7 @@ export interface Todo {
 export default function TodoApp() {
   const [todo, setTodo] = useState<string>();
   const [todos, setTodos] = useState<Todo[]>([]);
+  const router = useRouter();
 
   const handleAddTodo = () => {
     if (todo) {
@@ -39,6 +41,10 @@ export default function TodoApp() {
 
   const handleDeleteTodo = (id: number) => {
     setTodos(todos.filter((item) => item.id !== id));
+  };
+
+  const handleRouterHello = () => {
+    router.push("/hello");
   };
 
   return (
@@ -88,6 +94,7 @@ export default function TodoApp() {
           />
         </View>
         <Toast position="top" visibilityTime={2000} />
+        <Button onPress={handleRouterHello} title="hello page" />
       </View>
     </TouchableWithoutFeedback>
   );
