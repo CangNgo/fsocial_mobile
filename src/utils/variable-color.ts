@@ -14,12 +14,14 @@ export const COLORS = {
   accentPurple: "#8B5CF6",
   error: "#EF4444",
   success: "#10B981",
+  background_post: "#f8e1d8",
 
   // Gradients
   gradient: {
     primary: {
       start: "#FF4D00",
-      end: "#FF8A00",
+      middle: "#FF8A00",
+      end: "#FFB800",
       css: "linear-gradient(135deg, #FF4D00 0%, #FF8A00 100%)"
     },
     accent: {

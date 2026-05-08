@@ -1,7 +1,12 @@
+import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Text, View } from "react-native";
 
 const Home = () => {
+  const router = useRouter();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const restoreSession = useAuthStore((state) => state.restoreSession);
   const handleOnPress = () => {
     Alert.alert("hello");
   };

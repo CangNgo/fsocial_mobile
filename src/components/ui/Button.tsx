@@ -1,6 +1,7 @@
 import { COLORS } from "@/utils/variable-color";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+  ActivityIndicator,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -14,40 +15,54 @@ type ButtonVariant = "primary" | "white" | "outline";
 
 interface ButtonProps {
   onPress?: () => void;
-  title: string;
+  children: React.ReactNode;
   variant?: ButtonVariant;
+  loading?: boolean;
+  disable?: boolean;
   styleContainer?: StyleProp<ViewStyle>;
   styleContent?: StyleProp<TextStyle>;
+  styleChildren?: StyleProp<ViewStyle>;
   styleIcon?: StyleProp<ViewStyle>;
   leftIcons?: React.ReactNode;
   rightIcons?: React.ReactNode;
 }
 
 const Button = ({
-  title,
+  children,
   onPress,
   variant = "primary",
+  loading = false,
+  disable = false,
   styleContainer,
   styleContent,
+  styleChildren,
   styleIcon,
   leftIcons,
   rightIcons,
 }: ButtonProps) => {
+  const indicatorColor = variant === "primary" ? COLORS.textOnPrimary : COLORS.textPrimary;
+
   const content = (
-    <View style={styles.children}>
-      {leftIcons && <View style={styleIcon}>{leftIcons}</View>}
-      <Text style={[styles.text, textStyleByVariant[variant], styleContent]}>
-        {title}
-      </Text>
-      {rightIcons && <View style={styleIcon}>{rightIcons}</View>}
+    <View style={[styles.children, styleChildren]}>
+      {loading ? (
+        <ActivityIndicator size="small" color={indicatorColor} />
+      ) : (
+        <>
+          {leftIcons && <View style={styleIcon}>{leftIcons}</View>}
+          <Text style={[styles.text, textStyleByVariant[variant], styleContent]}>
+            {children}
+          </Text>
+          {rightIcons && <View style={styleIcon}>{rightIcons}</View>}
+        </>
+      )}
     </View>
   );
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={loading || disable ? undefined : onPress}
       style={({ pressed }) => [
-        { opacity: pressed ? 0.7 : 1 },
+        { opacity: loading || disable ? 0.6 : pressed ? 0.7 : 1 },
         styles.container,
         containerStyleByVariant[variant],
         styleContainer,
@@ -55,10 +70,9 @@ const Button = ({
     >
       {variant === "primary" ? (
         <LinearGradient
-          colors={[COLORS.gradient.primary.start, COLORS.gradient.primary.end]}
+          colors={[COLORS.gradient.primary.start, COLORS.gradient.primary.middle, COLORS.gradient.primary.end]}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
-          style={styles.gradient}
         >
           {content}
         </LinearGradient>
@@ -78,7 +92,6 @@ const containerStyleByVariant: Record<ButtonVariant, ViewStyle> = {
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 4,
   },
   white: {
     backgroundColor: "#FFFFFF",
@@ -119,19 +132,17 @@ const textStyleByVariant: Record<ButtonVariant, TextStyle> = {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 999,        // pill shape — bo tròn hoàn toàn
+    borderRadius: 999,
     alignSelf: "stretch",
-    overflow: "hidden",       // cần thiết để LinearGradient không tràn ra ngoài bo góc
-  },
-  gradient: {
-    paddingVertical: 14,
-    paddingHorizontal: 24,
+    overflow: "hidden",
   },
   children: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
   },
   text: {
     textAlign: "center",
