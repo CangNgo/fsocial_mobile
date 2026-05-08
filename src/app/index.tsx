@@ -1,9 +1,8 @@
 import * as Device from "expo-device";
-import { Platform, StyleSheet } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
-import TodoApp from "./todo";
 
 function getDevMenuHint() {
   if (Platform.OS === "web") {
@@ -24,8 +23,12 @@ function getDevMenuHint() {
   );
 }
 
-export default function HomeScreen() {
-  return <TodoApp />;
+export default function Index() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
